@@ -30,14 +30,97 @@ const HomeScreen = () => {
     }, [navigation]),
   );
 
-  return (
-    <View style={styles.container}>
+  const _renderNavBar = () => {
+    return (
       <NavBar
         title={'My Trips'}
         leftButton={<AntDesign name="home" size={30} />}
         rightButton={<Ionicons name="add-circle-outline" size={30} />}
         rightBtn_opress={() => navigation.navigate('AddTrips')}
       />
+    );
+  };
+
+  const _renderScrollView = () => {
+    return (
+      <ScrollView>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
+          {trips.map((item, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={styles.tripCard}
+                onPress={() =>
+                  navigation.navigate('DetailsScreen', {
+                    trip_details: item,
+                  })
+                }>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('AddTrips', {
+                      itemData: item,
+                      isEdit: true,
+                    })
+                  }
+                  activeOpacity={0.7}
+                  style={styles.tripFavButton}>
+                  <Feather
+                    name={'edit'}
+                    size={20}
+                    color={COLORS.primary_color}
+                  />
+                </TouchableOpacity>
+                <Image
+                  style={{width: '100%', aspectRatio: 1}}
+                  source={{
+                    uri: item.trip_bg.uri,
+                  }}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 10,
+                  }}>
+                  <Text
+                    style={[styles.TripCardTxt, {fontSize: moderateScale(16)}]}>
+                    {item.trip_title}
+                  </Text>
+                  <TouchableOpacity
+                    style={{alignItems: 'center', top: 8, padding: 4}}>
+                    <MaterialIcons
+                      name={'more-vert'}
+                      size={22}
+                      color={COLORS.yellow}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialIcons
+                    name={'location-on'}
+                    size={16}
+                    color={COLORS.grey_medium}
+                  />
+                  <Text numberOfLines={2} style={styles.propertyCardTxt}>
+                    {item.trip_destination}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollView>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {_renderNavBar()}
       {trips.length === 0 ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>No Trips Found !!</Text>
@@ -48,81 +131,7 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       ) : (
-        <ScrollView>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}>
-            {trips.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.tripCard}
-                  onPress={() =>
-                    navigation.navigate('DetailsScreen', {
-                      trip_details: item,
-                    })
-                  }>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('AddTrips', {
-                        itemData: item,
-                        isEdit: true,
-                      })
-                    }
-                    activeOpacity={0.7}
-                    style={styles.tripFavButton}>
-                    <Feather
-                      name={'edit'}
-                      size={20}
-                      color={COLORS.primary_color}
-                    />
-                  </TouchableOpacity>
-                  <Image
-                    style={{width: '100%', aspectRatio: 1}}
-                    source={{
-                      uri: item.trip_bg.uri,
-                    }}
-                  />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginTop: 10,
-                    }}>
-                    <Text
-                      style={[
-                        styles.TripCardTxt,
-                        {fontSize: moderateScale(16)},
-                      ]}>
-                      {item.trip_title}
-                    </Text>
-                    <TouchableOpacity
-                      style={{alignItems: 'center', top: 8, padding: 4}}>
-                      <MaterialIcons
-                        name={'more-vert'}
-                        size={22}
-                        color={COLORS.yellow}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <MaterialIcons
-                      name={'location-on'}
-                      size={16}
-                      color={COLORS.grey_medium}
-                    />
-                    <Text numberOfLines={2} style={styles.propertyCardTxt}>
-                      {item.trip_destination}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </ScrollView>
+        _renderScrollView()
       )}
     </View>
   );

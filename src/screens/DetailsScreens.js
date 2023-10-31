@@ -12,14 +12,18 @@ const DetailsScreen = () => {
   const route = useRoute();
   const item_details = route.params?.trip_details || null;
 
-  console.log('hari-->>details-->>', item_details);
-  return (
-    <View style={styles.container}>
+  const _renderNavBar = () => {
+    return (
       <NavBar
         title={item_details.trip_title}
         leftButton={<Ionicons name="arrow-back" size={30} />}
         leftBtn_onpress={() => navigation.goBack()}
       />
+    );
+  };
+
+  const _renderBGContainer = () => {
+    return (
       <View style={styles.ImageContainer}>
         <Image
           style={[styles.backgroundImage]}
@@ -30,7 +34,12 @@ const DetailsScreen = () => {
           resizeMode="contain"
         />
       </View>
-      <View style={{width: '90%', marginTop: 20, alignSelf: 'center'}}>
+    );
+  };
+
+  const _renderContant = () => {
+    return (
+      <View style={styles.contentContainer}>
         <View>
           <Text style={styles.Title}>Destination </Text>
           <Text style={styles.desc}>{item_details.trip_destination}</Text>
@@ -48,6 +57,14 @@ const DetailsScreen = () => {
           </Text>
         </View>
       </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {_renderNavBar()}
+      {_renderBGContainer()}
+      {_renderContant()}
     </View>
   );
 };
@@ -92,5 +109,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.grey_light,
     paddingVertical: 2,
+  },
+  contentContainer: {
+    width: '90%',
+    marginTop: 20,
+    alignSelf: 'center',
   },
 });

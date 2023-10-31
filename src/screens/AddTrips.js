@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   View,
   Platform,
+  ScrollView,
 } from 'react-native';
-import React, {useContext, useLayoutEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   useFocusEffect,
   useNavigation,
@@ -79,21 +80,6 @@ const AddTrips = () => {
         console.log('hari-->>images->>', newPhotos);
       }
     });
-  };
-
-  const createTrips = () => {
-    addNewTrip(title, destination, startDate, endDate, selectedPhoto);
-  };
-
-  const updateAddedTrips = async () => {
-    _updateAddedTrip(
-      item_data,
-      title,
-      destination,
-      startDate,
-      endDate,
-      selectedPhoto,
-    );
   };
 
   const _renderDate = (value, input_title, type, objData) => (
@@ -186,14 +172,19 @@ const AddTrips = () => {
     );
   };
 
-  return (
-    <View style={styles.container}>
+  const _renderNavbar = () => {
+    return (
       <NavBar
         title={isEdit ? 'Update Trip' : 'Add Trips'}
         leftButton={<Ionicons name="arrow-back" size={30} />}
         leftBtn_onpress={() => navigation.goBack()}
       />
-      <View>
+    );
+  };
+
+  const _renderInputContainers = () => {
+    return (
+      <ScrollView contentContainerStyle={{paddingBottom: 30}}>
         <AnimatedTextInput
           label={'Title'}
           value={title}
@@ -250,15 +241,45 @@ const AddTrips = () => {
             <MaterialIcons name="add-a-photo" size={50} />
           )}
         </View>
-      </View>
+      </ScrollView>
+    );
+  };
+
+  const createTrips = () => {
+    addNewTrip(title, destination, startDate, endDate, selectedPhoto);
+  };
+
+  const updateAddedTrips = async () => {
+    _updateAddedTrip(
+      item_data,
+      title,
+      destination,
+      startDate,
+      endDate,
+      selectedPhoto,
+    );
+  };
+
+  const _renderBottomBtn = () => {
+    return (
       <TouchableOpacity
         disabled={
           title === null || destination === null || selectedPhoto === null
         }
         style={styles.createBtn}
         onPress={() => (isEdit ? updateAddedTrips() : createTrips())}>
-        <Text style={styles.createTripTitle}>Create</Text>
+        <Text style={styles.createTripTitle}>
+          {isEdit ? 'Update' : 'Create'}
+        </Text>
       </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {_renderNavbar()}
+      {_renderInputContainers()}
+      {_renderBottomBtn()}
       {showDate && _renderDatePicker()}
     </View>
   );

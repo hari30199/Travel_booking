@@ -21,6 +21,8 @@ const Destinations = () => {
 
   const createDestinations = async () => {
     _createNewDestination(addDestinationName, addDestinationDesc);
+    setAddDestinationName('');
+    setAddDestinationDesc('');
   };
 
   const _renderModal = () => {
@@ -118,12 +120,31 @@ const Destinations = () => {
     updateDestination(item.destination_title);
   };
 
+  const _renderNavBar = () => {
+    return (
+      <NavBar
+        title={'Destinations'}
+        leftButton={<Ionicons name="arrow-back" size={30} />}
+        leftBtn_onpress={() => navigation.goBack()}
+      />
+    );
+  };
+
+  const _renderSearchBar = () => {
+    return (
+      <AnimatedTextInput
+        label={'Search Destination'}
+        value={searchValue}
+        onChangeText={value => setSearchValue(value)}
+      />
+    );
+  };
+
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={styles.renderItem}
       onPress={() => {
         console.log('hari>>latlong??fromSeacrH>>>', item);
-        // navigation.navigate('AddTrips', {title: item.destination_title});
         updatedestination(item);
       }}>
       <Text style={styles.titletxt}>{item.destination_title}</Text>
@@ -131,22 +152,24 @@ const Destinations = () => {
     </TouchableOpacity>
   );
 
-  const filtered_Data = _retriveMyDestinations().filter(item =>
+  const _renderBottomBtn = () => {
+    return (
+      <TouchableOpacity
+        style={styles.createBtn}
+        onPress={() => updateShowModal(true)}>
+        <Text style={styles.createTripTitle}>Create Destination</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const filtered_Data = _retriveMyDestinations()?.filter(item =>
     item.destination_title.includes(searchValue),
   );
 
   return (
     <View style={styles.container}>
-      <NavBar
-        title={'Destinations'}
-        leftButton={<Ionicons name="arrow-back" size={30} />}
-        leftBtn_onpress={() => navigation.goBack()}
-      />
-      <AnimatedTextInput
-        label={'Search Destination'}
-        value={searchValue}
-        onChangeText={value => setSearchValue(value)}
-      />
+      {_renderNavBar()}
+      {_renderSearchBar()}
       {_retriveMyDestinations().length === 0 ? (
         <View style={styles.noData}>
           <Text>No Data Found !!!</Text>
@@ -159,11 +182,7 @@ const Destinations = () => {
           keyExtractor={item => item.destination_id}
         />
       )}
-      <TouchableOpacity
-        style={styles.createBtn}
-        onPress={() => updateShowModal(true)}>
-        <Text style={styles.createTripTitle}>Create Destination</Text>
-      </TouchableOpacity>
+      {_renderBottomBtn()}
       {_renderModal()}
     </View>
   );

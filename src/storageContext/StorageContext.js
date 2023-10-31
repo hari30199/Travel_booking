@@ -199,7 +199,6 @@ export const StorageContext = ({children, props}) => {
 
   // update Destions to My trips
   const updateDestination = name => {
-    console.log('destination-->>incontext-->>', name);
     setdestination(name);
     navigation.goBack();
   };
